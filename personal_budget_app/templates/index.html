@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Personal Budgeting App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="left-column">
+            <h1>Personal Budgeting App</h1>
+            <h2>Expenses</h2>
+            <form action="/add_expense" method="post">
+                <input type="text" name="expense_name" placeholder="Expense name" required>
+                <input type="number" step="0.01" name="expense_amount" placeholder="Amount" required>
+                <button type="submit">Add Expense</button>
+            </form>
+            <h2>Set Budget</h2>
+            <form action="/set_budget" method="post">
+                <input type="number" step="0.01" name="budget" placeholder="Budget amount" required>
+                <button type="submit">Set Budget</button>
+            </form>
+            <h2>Expenses List</h2>
+            <ul>
+                {% for expense in expenses %}
+                <li>{{ expense[0] }} - ${{ expense[1] }}</li>
+                {% endfor %}
+            </ul>
+            <p>Total Expenses: ${{ total_expenses }}</p>
+            <p>Budget: ${{ budget }}</p>
+            <a href="/visualize">Visualize Expenses</a>
+            <h2>Reset Expenses and Budget</h2>
+            <form action="/reset" method="post">
+            <button type="submit">Reset Expenses and Budget</button>
+            </form>        
+        </div>
+
+        <div class="right-column">
+            <h2>Remaining Budget: ${{ remaining_budget }}</h2>
+            <h2>Potential Yearly Savings: ${{ yearly_savings | format_number }}</h2>
+            <a href="/savings_graph">View 5-Year Savings Graph</a>
+        </div>
+    </div>
+</body>
+</html>
