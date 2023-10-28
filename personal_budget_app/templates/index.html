@@ -1,43 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Personal Budgeting App</title>
+    <title>WiseWallet.com</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <div class="left-column">
-            <h1>Personal Budgeting App</h1>
-            <h2>Expenses</h2>
+        <div class="left column">
+            <div class="logo_container">
+                <img src="{{ url_for('static', filename='WiseWallet2.png') }}" alt="Logo" width="160">
+                <h1>&nbsp;Personal Budgeting</h1>
+            </div>
+            <h3>1. Set Your Monthly Expenses</h3>
             <form action="/add_expense" method="post">
                 <input type="text" name="expense_name" placeholder="Expense name" required>
                 <input type="number" step="0.01" name="expense_amount" placeholder="Amount" required>
                 <button type="submit">Add Expense</button>
             </form>
-            <h2>Set Budget</h2>
+            <h3>2. Set Your Monthly Budget</h3>
             <form action="/set_budget" method="post">
                 <input type="number" step="0.01" name="budget" placeholder="Budget amount" required>
                 <button type="submit">Set Budget</button>
             </form>
-            <h2>Expenses List</h2>
-            <ul>
-                {% for expense in expenses %}
-                <li>{{ expense[0] }} - ${{ expense[1] }}</li>
-                {% endfor %}
-            </ul>
-            <p>Total Expenses: ${{ total_expenses }}</p>
-            <p>Budget: ${{ budget }}</p>
-            <a href="/visualize">Visualize Expenses</a>
+            <div class="graph_container">
+                <div class="left column">
+                    <h3>List of Expenses:</h3>
+                    <ul>
+                        {% for expense in expenses %}
+                        <li>{{ expense[0] }} - ${{ expense[1] }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>Total Expenses: ${{ total_expenses }}</p>
+                    <p>Budget: ${{ budget }}</p>
+                </div>
+                <div class="right column">
+                    <img src="data:image/png;base64,{{ pie_chart }}" alt="Expense Breakdown Will Appear Here">
+                    </form>
+                </div>
+            </div>
             <h2>Reset Expenses and Budget</h2>
             <form action="/reset" method="post">
-            <button type="submit">Reset Expenses and Budget</button>
+                <button type="submit">Reset Expenses and Budget</button>
             </form>        
         </div>
 
         <div class="right-column">
-            <h2>Remaining Budget: ${{ remaining_budget }}</h2>
-            <h2>Potential Yearly Savings: ${{ yearly_savings | format_number }}</h2>
+            <h2>Remaining Monthly Budget: ${{ remaining_budget | format_number}}</h2>
+            <h2>Potential Yearly Savings (PYS): ${{ yearly_savings | format_number }}</h2>
             <a href="/savings_graph">View 5-Year Savings Graph</a>
+            <h2>Stock Price Visualization</h2>
+            <form action="/visualize" method="GET">
+                <label for="stock_symbol">Enter Stock Symbol:</label>
+                <input type="text" id="stock_symbol" name="stock_symbol" placeholder="Example 'AAPL'" required>
+                <button type="submit">Fetch Stock Price</button>
+                <h4>Your ROI if PYS invested for a 1Y period for selected stock: {{ roi }} </h4>
+            </form>
+            {% if 'stock_symbol' in request.args and chart_url_stock %}
+            <div>
+                <img src="data:image/png;base64,{{ chart_url_stock }}" alt="Stock Price Chart">
+            </div>
+            {% endif %}
         </div>
     </div>
 </body>

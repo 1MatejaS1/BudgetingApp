@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Prices</title>
+</head>
+<body>
+    <h1>Stock Price Visualization</h1>
+    <form action="/stock_prices" method="POST">
+        <label for="stock_symbol">Enter Stock Symbol:</label>
+        <input type="text" id="stock_symbol" name="stock_symbol" required>
+        <button type="submit">Fetch Stock Price</button>
+    </form>
+
+    {% if stock_data %}
+        <div>
+            <h2>{{ stock_data.name }}</h2>
+            <p>Stock Symbol: {{ stock_data.name }}</p>
+            <p>Start Date: {{ stock_data.index.min() }}</p>
+            <p>End Date: {{ stock_data.index.max() }}</p>
+            <p>Average Price: {{ stock_data.mean() }}</p>
+        </div>
+        <img src="data:image/png;base64,{{ chart_url }}" alt="Stock Price Chart">
+    {% endif %}
+</body>
+</html>
